@@ -95,6 +95,14 @@ is "proposed" and may be implemented with the goal of eventual inclusion
 into VinylDNS, at which point it becomes "active".
 
 * Fork the RFC repo https://github.com/vinyldns/rfcs
+* Note: if you want to use an all Github approach, you can:
+    * Go to your forked repository
+    * In the main page, click the `Branches` drop down
+    * Enter your RFC name in kebab-case there (for example `my-new-rfc`) and hit `Enter` to create the new branch
+    * Click on the `text` directory
+    * Click `Create new File` button
+    * Follow the directions here.  When finished, at the bottom of the screen enter the commit details.  Be sure to click "Merge directly into this branch."  Double-check you are on your `my-new-rfc` branch and **not** master.
+    * Open the pull request.
 * Decide on a clear and brief title for the new rfc, make it descriptive and unique. Copy `0000-template.md` to `text/0000-my-new-rfc.md`, where 'my-new-rfc' is the [kebab-cased version](https://en.wikipedia.org/wiki/Letter_case#Case_styles) of the RFC title, any non-letters removed. Don't assign an RFC number yet!
 * Fill in the RFC.
   - The first line should be the [titled-cased version](https://en.wikipedia.org/wiki/Letter_case#Case_styles) of the RFC, prefixed with the `# ` (hash and space) followed by a blank line. This should be the only first-degree headline in the entire RFC!
