@@ -1,9 +1,8 @@
 _NOTE: This format comes from the
 [Rust language RFC process](https://github.com/rust-lang/rfcs)._
 
-- Feature or Prototype: (fill me in with a unique identity, e.g.
-  my_awesome_feature)
-- Start Date: (fill me in with today's date, YYYY-MM-DD)
+- Feature or Prototype: shared_zones
+- Start Date: 2018-08-07
 - RFC PR: (leave this empty, populate once the PR is created with a github link to the PR)
 - Issue: (once approved, this will link to the issue tracker for implementation of the RFC)
 
@@ -52,7 +51,10 @@ Zones will be designated as `shared` by setting a `shared` flag (boolean) on the
 
 1. Add a `shared` flag to the `JSON` Zone model that will allow the alternative access control model.
 1. Add a `shared` flag in the portal when connecting to a zone (defaults to off)
-1. Add a `shared` flag in the portal's Zone Management screen that allows zone admins and VinylDNS admins to 
+1. Add a `shared` flag in the portal's Zone Management screen that allows zone admins and VinylDNS admins to turn on/off shared zone management.  Turning the flag off should simply disable the shared zone access check for future updates, and should _not_ attempt to clean up or clear the owners on the record sets.
+1. Add a `shared` query parameter when listing and searching zones, should default to `false` if not present.
+1. Add a `shared` check-box in the portal next to the search box that allows the users to navigate and search through shared zones.
+1. Add a `shared` column in the `zone` table (default false)
 
 ## Record Ownership Design
 Record ownership will be _optional_ in the system.  The property will be added to all `RecordSet`s, with the possibility of being `null`.
@@ -79,7 +81,10 @@ No other alternatives were discussed.  In order to support fully-automated (no h
 # Unresolved questions
 [unresolved]: #unresolved-questions
 
-What parts of the design are still TBD?
+## Impact on what a user sees
+For users that do not "own" zones and _exclusively_ work in shared zones, what will they see in the "zones" list?  This is particularly problemsome as users will see "all" shared zones, but only care about the few that they actually have made updates to.
+
+One solution to this problem is that we could idempotently insert a record in the "zone access" table.  The zone access table governs access for users and groups to zones.  It is how the system generates "my zones", limiting the list of zones that you have access to.  If a group is assigned an owner on any record in a zone, we create a zone access entry for that group to that zone.
 
 # Outcome(s)
 [outcome]: #outcome
