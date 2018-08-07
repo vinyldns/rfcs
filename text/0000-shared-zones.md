@@ -76,7 +76,7 @@ This does loosen up access control rules.  The record ownership checks and owner
 # Alternatives
 [alternatives]: #alternatives
 
-No other alternatives were discussed.  In order to support fully-automated (no hands on keys) DNS record management, we require an alternative access model other than what is supported today by ACL rules.
+1. As opposed to "open" access to _all_ records in the zone, we could further restrict which _records_ were "open" to the public using a new ACL rule.  For example, we could say "A, AAAA, CNAME" records are "shared".  "Shared" access indicates that access controls will follow what has beend defined in this document.  The downside is this complicates the ACL rules further, but makes shared access extremely flexible.
 
 # Unresolved questions
 [unresolved]: #unresolved-questions
