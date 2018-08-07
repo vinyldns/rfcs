@@ -47,17 +47,34 @@ A "record owner" is the group that is designated as the "owner" of a particular 
 1. If a record set does not yet exist, and the `owner` parameter is defined, the `owner` group will be assigned to the new record set when it is successfully created.
 1. VinylDNS, zone admins, and users that are members of the `owner` group can modify record ownership at any time.  This includes _reassigning_ and _unassigning_ record ownership for a particular record set.
 
+## Shared Zone Design
+Zones will be designated as `shared` by setting a `shared` flag (boolean) on the zone itself.  The flag should default to _false_.  This flag is actually already present, so the only change will be to allow the flag to be set.  The `shared` flag can only be set:
+
+1. Add a `shared` flag to the `JSON` Zone model that will allow the alternative access control model.
+1. Add a `shared` flag in the portal when connecting to a zone (defaults to off)
+1. Add a `shared` flag in the portal's Zone Management screen that allows zone admins and VinylDNS admins to 
+
+## Record Ownership Design
+Record ownership will be _optional_ in the system.  The property will be added to all `RecordSet`s, with the possibility of being `null`.
+
+1. Modify the `RecordSet` JSON to be able to accept a `owner`.  The `owner` is to be a VinylDNS `groupId` that the calling user is a member of.  
+1. For `Update RecordSet Requests`; the owner can be _reassigned_ by changing the `owner` to another group that the caller is a member of.
+1. For `Update RecordSet Requests`; the owner can be _unassigned_ by _clearing_ the `owner` in the JSON request sent.
+1. In the portal's Zone page, allow users to designate a record owner when creating or updating a record set.  
+1. Users should _not_ be allowed to specify a record owner if the zone is not shared.
+1. In the portal's Batch Change page, allow users to designat a record owner for the entire batch change.  A drop-down list of groups that the user is a member of should be provided to allow the user to choose _one_ group.
+1. For Batch Changes, do not reject changes if the owner is specified and the zone is not shared.  As batch changes can span shared and un-shared zones, we cannot enforce that requirement across all changes in the batch.
 
 
 # Drawbacks
 [drawbacks]: #drawbacks
 
-Why should we *not* do this?
+This does loosen up access control rules.  The record ownership checks and ownership reassignment do "lock down" things in a sense that we do not have an environment where users can stomp over other users records.
 
 # Alternatives
 [alternatives]: #alternatives
 
-What other designs have been considered? What is the impact of not doing this?
+No other alternatives were discussed.  In order to support fully-automated (no hands on keys) DNS record management, we require an alternative access model other than what is supported today by ACL rules.
 
 # Unresolved questions
 [unresolved]: #unresolved-questions
