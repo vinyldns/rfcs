@@ -30,12 +30,13 @@ When a zone is setup, the zone can be specified as "shared".  This means that an
 * For existing record sets, updates and deletes can only be made by users who are a member of the record owning group.
 If the owning group is unassigned, the change can be applied to the record set.
 
+## Access Control Checks
 In evaluating access controls, the current access models will supercede record set ownership.
 
 1. VinylDNS Admins can make any change
 1. Zone admins can change all records in a zone
 1. ACL rules can grant permissions to change records
-1. Finally, record ownership can allow access to record modification if the user is not authorized on the previous.  Record ownership is only consulted IFF shared zones are enabled on the zone the record lives in.
+1. Finally, record ownership can allow access to record modification if the user is not authorized on the previous checks.  Record ownership is only consulted IFF shared zones are enabled on the zone the record lives in.
 
 ## Record Ownership Overview
 Record ownership is tightly coupled to Shared Zones (shared zones could not be implemented without record ownership); therefore, we include record ownership features in this RFC.
@@ -77,7 +78,7 @@ API request is made `POST /zones` with the following
 {
   "adminGroupId": "9b22b686-54bc-47fb-a8f8-cdc48e6d04ae",
   "name": "dummy.",
-  "email": "test@example.com"
+  "email": "test@example.com",
   "shared": true
 }
 ```
@@ -179,7 +180,8 @@ When submitting a batch change, a new parameter `ownerGroupId` is added to the J
 
 Processing
 
-1. Ensure that the user is a member of the `ownerGroupId` if provided.
+1. Ensure that the user is a member of the `ownerGroupId` if provided
+1. If the user is not a member of the `ownerGroupId` provided, return a `403` error
 1. For each change that is generated, if the zone is shared and the `ownerGroupId` is provided, consult record ownership.
 1. If the change is disallowed, the entire batch change should be rejected.  The appropriate error should be returned on any change(s) that failed indicating that the user is not authorized because the record ownership check failed.
 
