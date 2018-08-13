@@ -58,6 +58,10 @@ data-stores = [
 ]
 ```
 
+## Valdiations
+
+1. Each repository must be linked to _exactly one_ data store.  If duplicate repositories are found, or a repository is not linked to a data store, the application should fail to start.
+
 # Drawbacks
 [drawbacks]: #drawbacks
 
