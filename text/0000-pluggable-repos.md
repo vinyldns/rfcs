@@ -28,8 +28,9 @@ Not all VinylDNS users (it could be argued very few) would want to run the same 
 # Design and Goals
 [design]: #design-and-goals
 
-1. Support having any number of database backends for the repositories.  This is required as we have to support things like running database migrations and setting up connection pools
-1. Support each database backend to have 1 or more repositories.  This allows mix-and-match across database types
+1. Support having any number of data stores for the repositories.  This allows us to mix-and-match different data stores per table, something currently done today with DynamoDB and MySQL
+1. Support data store specific configuration. 
+
 
 ```yaml
 data-stores = [
