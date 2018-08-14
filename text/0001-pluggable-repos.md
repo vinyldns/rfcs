@@ -1,7 +1,7 @@
 - Feature or Prototype: pluggable_repos
 - Start Date: 2018-08-03
 - RFC PR: #3
-- Issue: 
+- Issue: https://github.com/vinyldns/vinyldns/issues/103
 
 # Summary
 [summary]: #summary
@@ -74,13 +74,12 @@ None.
 # Unresolved questions
 [unresolved]: #unresolved-questions
 
-What parts of the design are still TBD?
+None.
 
 # Outcome(s)
 [outcome]: #outcome
 
-Was this RFC implemented, subsumed by another RFC or implementation, in-waiting,
-or discarded?
+Merging this RFC for implementation.
 
 # References
 [references]: #references
