@@ -22,13 +22,13 @@ Would like to have a repeatable benchmark that we can run to evaluate performace
 [design]: #design-and-goals
 
 1. Should be configurable as to which repository implementations are being used.  For example, `MySQL` vs `DynamoDB`
-1. Evaluate bulk insert performance times across different size bulk inserts.  The largest bulk insert is 10MM records, but we should understand performance characteristics.
+1. Evaluate bulk insert performance times across different size bulk inserts.  The largest bulk insert is 10MM records
 1. Evaluate read latency at estimated peak number of record sets (500MM record sets).  Read latency should be calculated at each of our "read" queries.
 1. Wipe the and re-initialize the database before running against 
 
 ## Benchmark Design
 [benchmark-design]: #benchmark-design
-To evaluate read performance, the benchmark must load the database with 500 million records across different zones.  We should have 1 million zones loaded in the database, with different sizes.  The bulk of the zones can have a few record sets in them, as very large zones will be fewer in number.
+To evaluate read performance, the benchmark must load the database with ~500 million records across different zones.  We should have 1 million zones loaded in the database, with different sizes.  The bulk of the zones can have a few record sets in them, as very large zones will be fewer in number.
 
 1. 40 zones of 10,000,000 record sets (represents 400 million records)
 1. 10 zones of 1,000,000 record sets (10 million records)
