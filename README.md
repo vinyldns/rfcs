@@ -77,14 +77,25 @@ developers beforehand to ascertain that the RFC may be desirable.
 Having a consistent impact on the project requires concerted effort
 toward consensus-building.
 
-The most common preparations for writing and submitting an RFC include
-filing and discussing ideas on the [RFC issue tracker][issues], and occasionally
-posting "pre-RFCs" on the [VinylDNS Dev Forum][rfcs category] for early
-review.
-
 As a rule of thumb, receiving encouraging feedback from long-standing
 project developers, and particularly members of the core team or existing
 contributors, is a good indication that the RFC is worth pursuing.
+
+In general:
+1. Open an issue https://github.com/vinyldns/vinyldns/issues to discuss a new feature or enhancement
+1. After discussion on the issue, the issue maybe small enough where an RFC is not warranted.  In this case, the issue will be moved to `ready` or in progress for development.
+1. If the issue does warrant an RFC (at the discretion of the maintainers commenting on the issue tracker), follow the process defined below on setting up a new RFC.
+
+## High level RFC Process
+[High level RFC Process]: #high-level-rfc-process
+
+1. Start a new RFC as a Pull Request.  The RFC enters a "Proposed" status.
+1. A shepherd / maintainer will review your RFC and help get it to the point of consideration.  Typically this will be to comment on your PR.
+1. As the RFC Author, make changes to your PR to evolve it to the point where all questions are answered and comments are addressed.
+1. How long an RFC remains in the "Proposed" status is up to the author and shepherd.  This could be a day, or several weeks.
+1. When the RFC has been reviewed and updated, it will be "proposed for final comment period".  It will also be assigned a dispostion.  `disposition-merge` means to move it forward to implementation.  `disposition-postpone` indicates we will close and revisit at a later time.  `disposition-close` indicates that the RFC will not move forward for reasons indicated on the PR and RFC.
+1. The final comment period stays open for 5 business days, after which, unless there are significant objections, the RFC moves to the proposed disposition.
+1. When an RFC is accepted, the author is free to begin development.  PRs should be linked to the issue tracker for the RFC.  If the author is not an implementer, it will go into the backlog of development for the maintainers, to be implemented as time allows. 
 
 ## What the process is
 [What the process is]: #what-the-process-is
@@ -95,6 +106,14 @@ is "proposed" and may be implemented with the goal of eventual inclusion
 into VinylDNS, at which point it becomes "active".
 
 * Fork the RFC repo https://github.com/vinyldns/rfcs
+* Note: if you want to use an all Github approach, you can:
+    * Go to your forked repository
+    * In the main page, click the `Branches` drop down
+    * Enter your RFC name in kebab-case there (for example `my-new-rfc`) and hit `Enter` to create the new branch
+    * Click on the `text` directory
+    * Click `Create new File` button
+    * Follow the directions here.  When finished, at the bottom of the screen enter the commit details.  Be sure to click "Merge directly into this branch."  Double-check you are on your `my-new-rfc` branch and **not** master.
+    * Open the pull request.
 * Decide on a clear and brief title for the new rfc, make it descriptive and unique. Copy `0000-template.md` to `text/0000-my-new-rfc.md`, where 'my-new-rfc' is the [kebab-cased version](https://en.wikipedia.org/wiki/Letter_case#Case_styles) of the RFC title, any non-letters removed. Don't assign an RFC number yet!
 * Fill in the RFC.
   - The first line should be the [titled-cased version](https://en.wikipedia.org/wiki/Letter_case#Case_styles) of the RFC, prefixed with the `# ` (hash and space) followed by a blank line. This should be the only first-degree headline in the entire RFC!
