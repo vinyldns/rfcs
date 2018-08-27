@@ -14,7 +14,7 @@ Create a database benchmark for purposes of benchmarking different datastore.
 # Motivation
 [motivation]: #motivation
 
-We are looking to evaluate alternative databases than DynamoDB.  DynamoDB has limitations regarding querying that limits what we can do from a feature perspective.  However, it is extremely scalable and very fast.
+We are looking to evaluate alternative databases other than DynamoDB.  DynamoDB has limitations regarding querying that limits what we can do from a feature perspective.  However, it is extremely scalable and very fast.
 
 Would like to have a repeatable benchmark that we can run to evaluate performace characteristics for recordset and recordset change data.  The benchmark can be used to tweak configuration parameters on the databases as well, in order to understand impact.
 
@@ -28,9 +28,9 @@ Would like to have a repeatable benchmark that we can run to evaluate performace
 
 ## Benchmark Design
 [benchmark-design]: #benchmark-design
-To evaluate read performance, the benchmark must load the database with ~500 million records across different zones.  We should have 1 million zones loaded in the database, with different sizes.  The bulk of the zones can have a few record sets in them, as very large zones will be fewer in number.
+To evaluate read performance, the benchmark must load the database with ~500 million records across different zones.  We should have millions of zones loaded in the database, with different sizes.  The bulk of the zones can have a few record sets in them, as very large zones will be fewer in number.
 
-1. 40 zones of 10,000,000 record sets (represents 400 million records)
+1. 20 zones of 10,000,000 record sets (represents 200 million records)
 1. 10 zones of 1,000,000 record sets (10 million records)
 1. 10 zones of 100,000 record sets (1 million records)
 1. 100 zones of 10,000 record sets (1 million records)
@@ -39,7 +39,7 @@ To evaluate read performance, the benchmark must load the database with ~500 mil
 1. 10,000,000 zones of 10 record sets (100 million records)
 
 **Total Zones: ~10 million**
-**Total Records: ~500 million**
+**Total Records: ~300 million**
 
 The benchmark should
 
@@ -51,7 +51,7 @@ The benchmark should
 ## Benchmark Implementation
 Since the VinylDNS repositories are all implemented in Scala, a java (or preferably Scala) based tool must be used to run the benchmarks.
 
-A common tool used for performance testing is [Gatling](https://gatling.io/).  It has support for writing custom simulations, which should allow us to benchmark directly against the Scala repositories.  More research into this has to be done, as Gatling is targeted toward HTTP.  https://leaks.wanari.com/2017/02/10/write-custom-protocol-gatling/ looks to have some recent info on how to do this.
+Statistics for each step should be recorded in a manner that would allow it to be exported later.
 
 # Drawbacks
 [drawbacks]: #drawbacks
