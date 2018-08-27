@@ -36,7 +36,7 @@ In evaluating access controls, the current access models will supercede record s
 1. VinylDNS Admins can make any change
 1. Zone admins can change all records in a zone
 1. ACL rules can grant permissions to change records
-1. Finally, record ownership can allow access to record modification if the user is not authorized on the previous checks.  Record ownership is only consulted IFF shared zones are enabled on the zone the record lives in.
+1. Finally, record ownership can allow access to record modification if the user is not authorized on the previous checks.  Record ownership is only consulted if and only if shared zones are enabled on the zone the record lives in.
 
 ## Record Ownership Overview
 Record ownership is tightly coupled to Shared Zones (shared zones could not be implemented without record ownership); therefore, we include record ownership features in this RFC.
@@ -54,8 +54,8 @@ Zones will be designated as `shared` by setting a `shared` flag (boolean) on the
 1. Add a `shared` flag in the portal when connecting to a zone (defaults to off)
 1. Add a `shared` flag in the portal's Zone Management screen that allows zone admins and VinylDNS admins to turn on/off shared zone management.  Turning the flag off should simply disable the shared zone access check for future updates, and should _not_ attempt to clean up or clear the owners on the record sets.
 1. Add a `shared` query parameter when listing and searching zones, should default to `false` if not present.
-1. Add a `shared` check-box in the portal next to the search box that allows the users to navigate and search through shared zones.
 1. Add a `shared` column in the `zone` table (default false)
+1. Users should have the ability to see their records (records they are in the owning group for) in shared zones.  
 
 ## Record Ownership Design
 Record ownership will be _optional_ in the system.  The property will be added to all `RecordSet`s, with the possibility of being `null`.
@@ -65,7 +65,7 @@ Record ownership will be _optional_ in the system.  The property will be added t
 1. For `Update RecordSet Requests`; the owner can be _unassigned_ by _clearing_ the `ownerGroupId` in the JSON request sent.
 1. In the portal's Zone page, allow users to designate a record owner when creating or updating a record set.  
 1. Users should _not_ be allowed to specify an `ownerGroupId` if the zone is not shared.  If the `ownerGroupId` is provided and the zone is not shared, the `ownerGroupId` will be discarded.
-1. In the portal's Batch Change page, allow users to designate a record owner for the entire batch change.  A drop-down list of groups that the user is a member of should be provided to allow the user to choose _one_ group.
+1. In the portal's Batch Change page, allow users to designate a record owner for the entire batch change.  A drop-down list of groups that the user is a member of should be provided to allow the user to optionally choose _one_ group.
 1. For Batch Changes, do not reject changes if the `ownerGroupId` is specified and the zone is not shared.  As batch changes can span shared and un-shared zones, we cannot enforce that requirement across all changes in the batch.
 
 ## Example Setup
@@ -131,8 +131,8 @@ Processing:
 ```
 
 Processing:
-1. The user making the request must be a member of the _new_ owner group (or an admin)
-1. The user making the request must be a member of the _previous_ owner group (or an admin)
+1. The user making the request must be a member of the _new_ owner group, zone admin group, or vinyldns admin
+1. The user making the request must be a member of the _previous_ owner group, zone admin group, or vinyldns admin
 1. If the user making the request is not a member of either group (or an admin), a `403` error will be returned
 1. The record set is updated, the `ownerGroupId` is set to the value provided
 
@@ -203,6 +203,8 @@ This does loosen up access control rules.  The record ownership checks and owner
 For users that do not "own" zones and _exclusively_ work in shared zones, what will they see in the "zones" list?  This is particularly problemsome as users will see "all" shared zones, but only care about the few that they actually have made updates to.
 
 One solution to this problem is that we could idempotently insert a record in the "zone access" table.  The zone access table governs access for users and groups to zones.  It is how the system generates "my zones", limiting the list of zones that you have access to.  If a group is assigned an owner on any record in a zone, we create a zone access entry for that group to that zone.
+
+**We are not going to explore the impact to the user experience in the Portal in this RFC.  There is growing consensus that we need a different workflow that allows users to focus on their records and changes, as opposed to "zones".  For purposes of this RFC, it is sufficient to indicate that the user can access records in shared zones.  The zone access mechanism mentioned above should be sufficient.**
 
 # Outcome(s)
 [outcome]: #outcome
