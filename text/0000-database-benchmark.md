@@ -48,6 +48,41 @@ The benchmark should
 1. Capture statistics for each stage loaded
 1. Capture statistics for each query for 1 of each zone size loaded.  For example, `RecordSetRepository.listRecordSets` for 10 record sets, 100 record sets, 1000 record sets, etc. 7 in total.
 
+**Configuration**
+The benchmark should be configurable, in order to allow for shorter or longer runs.  Loading 100 million records can take a long time.  It is valuable during testing to be able to do shorter runs.  As such, the benchmark should be configurable.  An example configuration could follow:
+
+```yaml
+benchmark {
+  # number of zones to spread the records across
+  zones: 10000000
+  
+  records {
+    # number of record inserts of 10 records
+    xs: 10,000,000
+  
+    # number of record inserts of 100 records
+    s: 1,000,000
+  
+    # number of record inserts of 1000 records
+    m: 1,000
+  
+    # number of record inserts of 10,000 records
+    l: 100
+    
+    # number of record inserts of 100,000 records
+    xl: 10
+  
+    # number of record inserts of 1,000,000 records
+    xxl: 10
+    
+    # number of record inserts of 10,000,000 records
+    xxxl: 20
+  }
+}
+```
+
+**Note: the configuration is subject to change during implementation**
+
 ## Benchmark Implementation
 Since the VinylDNS repositories are all implemented in Scala, a java (or preferably Scala) based tool must be used to run the benchmarks.
 
