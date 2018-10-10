@@ -31,7 +31,7 @@ When a zone is setup, the zone can be specified as "shared".  This means that an
 If the owning group is unassigned, the change can be applied to the record set.
 
 ## Access Control Checks
-In evaluating access controls, the current access models will supercede record set ownership.
+In evaluating access controls, the current access models will supercede record set ownership.  When performing an access control check for record operations, we continue to follow the existing access validation and add a new one, namely if the zone is shared then consult record ownership.
 
 1. VinylDNS Admins can make any change
 1. Zone admins can change all records in a zone
@@ -50,12 +50,12 @@ A "record owner" is the group that is designated as the "owner" of a particular 
 ## Shared Zone Design
 Zones will be designated as `shared` by setting a `shared` flag (boolean) on the zone itself.  The flag should default to _false_.  *Note: This flag is actually already present, so the only change will be to allow the flag to be set from the API and UI.*  The `shared` flag can only be set:
 
+1. Only VinylDNS Admins will have the ability to designate a zone as shared.
 1. Add a `shared` flag to the `JSON` Zone model that will allow the alternative access control model.
 1. Add a `shared` flag in the portal when connecting to a zone (defaults to off)
-1. Add a `shared` flag in the portal's Zone Management screen that allows zone admins and VinylDNS admins to turn on/off shared zone management.  Turning the flag off should simply disable the shared zone access check for future updates, and should _not_ attempt to clean up or clear the owners on the record sets.
-1. Add a `shared` query parameter when listing and searching zones, should default to `false` if not present.
+1. Add a `shared` flag in the portal's Zone Management screen that allows VinylDNS admins to turn on/off shared zone management.  Turning the flag off should simply disable the shared zone access check for future updates, and should _not_ attempt to clean up or clear the owners on the record sets.
 1. Add a `shared` column in the `zone` table (default false)
-1. Users should have the ability to see their records (records they are in the owning group for) in shared zones.  
+1. Users _will not_ have the ability to see records in shared zones, unless they have access as VinylDNS Admin, Zone Admin, or via an ACL rule.  
 
 ## Record Ownership Design
 Record ownership will be _optional_ in the system.  The property will be added to all `RecordSet`s, with the possibility of being `null`.
@@ -104,8 +104,8 @@ API request is made `POST /zones/<id>/recordsets` to a zone that is shared with 
 }
 ```
 
-Processing:
-1. The user making the request must be a member of the group specified by `ownerGroupId` (or an admin)
+Processing (Assumes the user does not have access to the zone):
+1. The user making the request must be a member of the group specified by `ownerGroupId`
 1. If the user making the request is not a member of the group specified, a `403` error will be returned
 1. If the zone is not shared, the `ownerGroupId` will be discarded.
 1. If the zone is shared, the `ownerGroupId` will be saved on the record set
@@ -130,18 +130,18 @@ Processing:
 }
 ```
 
-Processing:
-1. The user making the request must be a member of the _new_ owner group, zone admin group, or vinyldns admin
-1. The user making the request must be a member of the _previous_ owner group, zone admin group, or vinyldns admin
-1. If the user making the request is not a member of either group (or an admin), a `403` error will be returned
+Processing (Assumes the user does not have access to the zone):
+1. The user making the request must be a member of the _new_ owner group
+1. The user making the request must be a member of the _previous_ owner group
+1. If the user making the request is not a member of either group, a `403` error will be returned
 1. The record set is updated, the `ownerGroupId` is set to the value provided
 
 **Deleting an "owned" record set in a shared zone via the API**
 
 `DELETE /zones/<id>/recordsetes<id>`
 
-Processing:
-1. The user making the request must be a member of the owner group for the record set (or an admin)
+Processing (Assumes the user does not have access to the zone):
+1. The user making the request must be a member of the owner group for the record set
 1. If the user is not a member of the `ownerGroupId` of the record set being deleted, the request will be rejected with a `403` error
 1. If the user is a member, the record set will be deleted normally
 1. The "owner group" is not preserved after deletion of a record set.  The record set is assumed to be "unassigned" on deletion.
@@ -178,7 +178,7 @@ When submitting a batch change, a new parameter `ownerGroupId` is added to the J
 }
 ```
 
-Processing
+Processing (Assumes the user does not have access to the zone)
 
 1. Ensure that the user is a member of the `ownerGroupId` if provided
 1. If the user is not a member of the `ownerGroupId` provided, return a `403` error
@@ -209,8 +209,8 @@ One solution to this problem is that we could idempotently insert a record in th
 # Outcome(s)
 [outcome]: #outcome
 
-Was this RFC implemented, subsumed by another RFC or implementation, in-waiting,
-or discarded?
+1. Removed UI requirements for this RFC.  If a user does not have access to a shared zone, the only way to perform updates to records will be through a batch change.  Users will not have access to the shared zones other than viewing the changes they made in their batch change history.
+
 
 # References
 [references]: #references
