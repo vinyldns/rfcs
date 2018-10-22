@@ -31,7 +31,7 @@ When a zone is setup, the zone can be specified as "shared".  This means that an
 If the owning group is unassigned, the change can be applied to the record set.
 
 ## Access Control Checks
-In evaluating access controls, the current access models will supercede record set ownership.  When performing an access control check for record operations, we continue to follow the existing access validation and add a new one, namely if the zone is shared then consult record ownership.
+When performing an access control check for record operations, we continue to follow the existing access validation and add a new one, namely if the zone is shared then consult record ownership.
 
 1. VinylDNS Admins can make any change
 1. Zone admins can change all records in a zone
@@ -43,8 +43,9 @@ Record ownership is tightly coupled to Shared Zones (shared zones could not be i
 
 A "record owner" is the group that is designated as the "owner" of a particular record set.  A new _optional_ parameter will be passed in on all record set operations to indicate the "group" that the change is made "on behalf of".  There are multiple ways that the owner is assigned:
 
-1. If a record set is imported in, initially the owner is unassigned.  Updates to the record set would assign the owner if the `owner` parameter is defined on the request.  If the `owner` is not defined, then it will remain unchanged.  
+1. If a record set is imported into VinylDNS, initially the owner is unassigned.  Updates to the record set would assign the owner if the `owner` parameter is defined on the request.  If the `owner` is not defined, then it will remain unassigned.  
 1. If a record set does not yet exist, and the `owner` parameter is defined, the `owner` group will be assigned to the new record set when it is successfully created.
+1. If a record set has the `owner` group set, and an update is made that _clears_ the field, the `owner` group will be cleared making it unassigned.
 1. VinylDNS, zone admins, and users that are members of the `owner` group can modify record ownership at any time.  This includes _reassigning_ and _unassigning_ record ownership for a particular record set.
 
 ## Shared Zone Design
@@ -63,7 +64,7 @@ Record ownership will be _optional_ in the system.  The property will be added t
 1. Modify the `RecordSet` JSON to have an `ownerGroupId` property.  The `ownerGroupId` is to be a VinylDNS `groupId` that the calling user is a member of.  
 1. For `Update RecordSet Requests`; the owner can be _reassigned_ by changing the `ownerGroupId` to another group that the caller is a member of.
 1. For `Update RecordSet Requests`; the owner can be _unassigned_ by _clearing_ the `ownerGroupId` in the JSON request sent.
-1. In the portal's Zone page, allow users to designate a record owner when creating or updating a record set.  
+1. In the portal's Zone page, allow users to designate a record owner when creating or updating a record set.  This option should only be available if the zone is _shared_.  
 1. Users should _not_ be allowed to specify an `ownerGroupId` if the zone is not shared.  If the `ownerGroupId` is provided and the zone is not shared, the `ownerGroupId` will be discarded.
 1. In the portal's Batch Change page, allow users to designate a record owner for the entire batch change.  A drop-down list of groups that the user is a member of should be provided to allow the user to optionally choose _one_ group.
 1. For Batch Changes, do not reject changes if the `ownerGroupId` is specified and the zone is not shared.  As batch changes can span shared and un-shared zones, we cannot enforce that requirement across all changes in the batch.
