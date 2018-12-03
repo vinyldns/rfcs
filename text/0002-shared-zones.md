@@ -3,8 +3,8 @@ _NOTE: This format comes from the
 
 - Feature or Prototype: shared_zones
 - Start Date: 2018-08-07
-- RFC PR: (leave this empty, populate once the PR is created with a github link to the PR)
-- Issue: (once approved, this will link to the issue tracker for implementation of the RFC)
+- RFC PR: https://github.com/vinyldns/rfcs/pull/6
+- Issue: https://github.com/vinyldns/vinyldns/issues/346
 
 # Summary
 [summary]: #summary
