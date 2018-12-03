@@ -68,6 +68,7 @@ Record ownership will be _optional_ in the system.  The property will be added t
 1. Users should _not_ be allowed to specify an `ownerGroupId` if the zone is not shared.  If the `ownerGroupId` is provided and the zone is not shared, the `ownerGroupId` will be discarded.
 1. In the portal's Batch Change page, allow users to designate a record owner for the entire batch change.  A drop-down list of groups that the user is a member of should be provided to allow the user to optionally choose _one_ group.
 1. For Batch Changes, do not reject changes if the `ownerGroupId` is specified and the zone is not shared.  As batch changes can span shared and un-shared zones, we cannot enforce that requirement across all changes in the batch.
+1. For Batch Changes, do not _change_ the `ownerGroupId` during a record set `update` operation.  Once it is set, always leave it set (until delete) for batch changes _only_.
 
 ## Example Setup
 This example is to illustrate use cases around setting up and using shared zones.
