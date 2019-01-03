@@ -64,7 +64,7 @@ Casual users generally use the _batch change_ screen to make their changes; wher
 
 ## Use Cases
 
-### Create an A record set with PTR correspondance enabled
+### Create an A or a AAAA record set with PTR correspondance enabled
 
 _Note: This can be entered via batch or zone screen, the net action is to create an A record set_
 
@@ -83,7 +83,34 @@ _Note: This can be entered via batch or zone screen, the net action is to create
 
 1. If the user does not have access to update the PTR, reject the request (batch change request or create record set request)
 
-###
+### Create a PTR record set with PTR correspondance enabled
+
+_Note: This can be entered via batch or zone screen, the net action is to create an A record set.  This case should mirror the A or AAAA record set case_
+
+1. System detects that a new PTR record set is to be created and the PTR correspondance flag is set to `true`
+2. Check that there is only 1 record in the PTR record set
+3. Lookup the corresponding A or AAAA record in our database to see if it already exists
+4. If it exists in VinylDNS, ensure that the user has access to make the change of the A or AAAA record
+
+#### Exception Case: Multi-record PTR with PTR correspondance enabled
+
+1.  By the definition of PTR correspondance, there can be exactly **one** record in the record set.  Reject the request with a failure message indicating that the request is malformed
+        
+#### Exception Case: A or AAAA Record does not exist in VinylDNS database
+
+1. If it does not exist, look up the corresponding A or AAAA record in the backend DNS server
+    1. If the record does not exist in the backend, then proceed with creating the A or AAAA record normally
+    2. If the record exists in the backend, then proceed with _updating_ the A or AAAA record, which will result in replacing it in the DNS backend.  _Note: This would be simply an Update Record Set Change that is processed for the A or AAAA_
+    
+#### Exception Case: The user does not have access to the A or AAAA record
+
+1. If the user does not have access to update the A or AAAA record, reject the request (batch change request or create record set request)
+
+### Update an A or AAAA record set with PTR correspondance enabled
+
+_Note: This can be entered via batch or zone screen, the net action is to create an A record set.  This case should mirror the A or AAAA record set case_
+
+
 
 # Drawbacks
 [drawbacks]: #drawbacks
