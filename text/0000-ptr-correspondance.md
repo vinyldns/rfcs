@@ -36,6 +36,25 @@ PTR correspondance attempts to enforce this best practice, facilitating the corr
 # Design and Goals
 [design]: #design-and-goals
 
+The application has 2 kinds of users:
+
+1. Casual users - these are users who simply want to give names to things.  They generally are not aware of the complexity of DNS, or even what a DNS record is.
+2. Advanced users - these are users who are generally well-versed in DNS, and will be familiar with the concepts of PTR, A, AAAA records and the idea of PTR correspondance.
+
+The recommended approach is to facilitate PTR correspondance via an option when users manage records.  We do not want to manage the correspondance for users automatically, as there are valid use cases when correspondance is not needed as well as times when a PTR record _should_ have multiple forward records associated with it.
+
+Casual users generally use the _batch change_ screen to make their changes; whereas advanced users will typically manage their zones via the _zone_ screen.
+
+## Batch Screen
+
+1. For any ADD record change for an A or AAAA record, allow the user to check a box to automatically update the corresponding PTR record.  This check box should be **checked** by default.
+1. For any DELETE record change for an A or AAAA record, allow the user to check a box to automatically delete the corresponding PTR record.  This check box should be **checked** by default.
+1. For any ADD record change for a PTR record, allow the user to check a box to automatically update the corresponding A or AAAA record.  This check box should be **checked** by default.
+1. For any DELETE record change for a PTR record, allow the user to check a box to automatically delete the corresponding A or AAAA record.  This check box should be **checked** by default.
+
+
+
+
 ## Shared Zone Overview
 When a zone is setup, the zone can be specified as "shared".  This means that any VinylDNS user can potentially make any change to the shared zone.  The following define the features and functions of shared zones
 
