@@ -52,6 +52,15 @@ Casual users generally use the _batch change_ screen to make their changes; wher
 1. For any ADD record change for a PTR record, allow the user to check a box to automatically update the corresponding A or AAAA record.  This check box should be **checked** by default.
 1. For any DELETE record change for a PTR record, allow the user to check a box to automatically delete the corresponding A or AAAA record.  This check box should be **checked** by default.
 
+## Zone Screen
+
+1. When a user chooses to Create a new A or AAAA record set, allow the user to check a box to automatically update the corresponding PTR records.  **checked** by default.
+1. When a user chooses to Update an A or AAAA record set, allow the user to check a box to automatically update the corresponding PTR records.  **checked** by default.
+1. When a user chooses to Delete an A or AAAA record set, allow the user to check a box to automatically delete the corresponding PTR records.  **checked** by default.
+1. When a user chooses to Create a new PTR record set, allow the user to check a box to automatically update the corresponding A or AAAA records.  **checked** by default.
+1. When a user chooses to Update a PTR record set, allow the user to check a box to automatically update the corresponding A or AAAA records.  **checked** by default.
+1. When a user chooses to Delete a PTR record set, allow the user to check a box to automatically delete the corresponding A or AAAA records.  **checked** by default.
+
 
 
 
