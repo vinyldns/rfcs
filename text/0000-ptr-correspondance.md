@@ -62,7 +62,28 @@ Casual users generally use the _batch change_ screen to make their changes; wher
 1. When a user chooses to Delete a PTR record set, allow the user to check a box to automatically delete the corresponding A or AAAA records.  **checked** by default.
 
 
+## Use Cases
 
+### Create an A record set with PTR correspondance enabled
+
+_Note: This can be entered via batch or zone screen, the net action is to create an A record set_
+
+1. System detects that a new A record set is to be created and the PTR correspondance flag is set to `true`
+2. For each IP address in the A record set, lookup the corresponding PTR record in our database to see if it already exists
+3. If it exists in VinylDNS, ensure that the user has access to make the change of the PTR record
+
+        
+#### Exception Case: PTR Record does not exist in VinylDNS database
+
+1. If it does not exist, look up the corresponding PTR record in the backend DNS server
+    1. If the record does not exist in the backend, then proceed with creating the PTR record normally
+    2. If the record exists in the backend, then proceed with _updating_ the PTR record, which will result in replacing it in the DNS backend.  _Note: This would be simply an Update Record Set Change that is processed for the PTR_
+    
+#### Exception Case: The user does not have access to the PTR record
+
+1. If the user does not have access to update the PTR, reject the request (batch change request or create record set request)
+
+###
 
 # Drawbacks
 [drawbacks]: #drawbacks
