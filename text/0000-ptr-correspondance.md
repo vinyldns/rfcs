@@ -9,20 +9,29 @@ _NOTE: This format comes from the
 # Summary
 [summary]: #summary
 
-PTR Links allow users to easily create and manage PTR record for A and AAAA records.
-
-# Motivation
-[motivation]: #motivation
-
 PTR records facilitate reverse lookups via utilities like `whois` in order to determine the domain name for a given IP address.  In general, it is best practice to ensure that every A and AAAA record has a exactly **one matching** PTR record in a reverse zone.  Similarly, each PTR record set should have exactly one record in it that corresponds to the A or AAAA record that it points to.
 
 Due to the nature of DNS, these records exist in _separate_ DNS zones.  In order to facilitate this best practice, users have to 1) be aware of the convention and 2) ensure that they are making updates in both the correct forward and reverse zone.
 
-The PTR links feature for VinylDNS will simplify the implementation of this best practice.  We will allow users to declare
+PTR Correspondance will make it simpler to enable this best practice for VinylDNS users by giving them the option to keep forward and reverse records in sync.
 
-Zones such as IP4 and IP6 reverse zones, and large "common" zones are used by many different users and groups.  DNS records in these zones change frequently.  Further, they have no easily identifable "owner".  For example, contiguous IP space maybe granted to an NDC team; however, they typically do not govern (nor do they want to govern), who creates PTR records to claim specific addresses in that IP space.
+# Motivation
+[motivation]: #motivation
 
-Shared zones will allow these kinds of zones (unowned / shared by many) to use an alternative access control model.  This allows users to freely and safely make changes in these zones; but still prevents stomping on DNS records.
+Ideally, every forward record points to exactly one reverse records, and that reverse record points to exactly one forward record.  This best practice is cumbersome in VinylDNS today, as users have to make 2 separate transactions in order to keep the forward and reverse records aligned.  The present process follows:
+
+1. User creates an A record `foo` in the `bar.com` zone: `foo.bar.com A 300 192.168.0.1`
+2. User creates a PTR record `1` in the `0.168.192.in-addr.arpa` zone: `1 PTR 300 foo.bar.com`
+
+Similarly, when a user goes to _update_ the record, they need to make 3 separate transactions:
+
+1. User updates `foo` in the `bar.com` zone to a new IP address: `foo.bar.com A 300 10.121.0.200`
+2. User deletes the PTR record `1` in the `0.168.192.in-addr.arpa` zone: `1 PTR 300 foo.bar.com`
+3. User creates the PTR record `200` in the `0.121.10.in-addr.arpa` zone: `200 PTR 300 foo.bar.com`
+
+Finally, when a user _deletes_ the record, they need to make sure to delete both the forward and reverse records in 2 transactions.
+
+PTR correspondance attempts to enforce this best practice, facilitating the correspondance between A, AAAA and their PTR records. 
 
 # Design and Goals
 [design]: #design-and-goals
