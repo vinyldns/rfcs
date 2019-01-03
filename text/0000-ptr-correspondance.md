@@ -62,6 +62,8 @@ Casual users generally use the _batch change_ screen to make their changes; wher
 1. When a user chooses to Delete a PTR record set, allow the user to check a box to automatically delete the corresponding A or AAAA records.  **checked** by default.
 
 
+
+
 # Drawbacks
 [drawbacks]: #drawbacks
 
