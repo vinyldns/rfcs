@@ -110,6 +110,11 @@ _Note: This can be entered via batch or zone screen, the net action is to create
 
 _Note: This can be entered via batch or zone screen, the net action is to create an A record set.  This case should mirror the A or AAAA record set case_
 
+1. System detects an update to an existing A or AAAA record set with PTR correspondance enabled
+2. For each IP address in the A record set, lookup the corresponding PTR record in our database to see if it already exists
+3. If it exists in VinylDNS, ensure that the user has access to make the change of the PTR record
+    1. If an address is _removed_ from the record set as part of the update, issue a **Delete** if and only if there is only a single record in the record set.  If there are multiple records in the PTR record set, **reject** the change
+    2. If an address is _added_ to the record set as part of the update, issue an **Update** to the PTR record set if and only if there is a single record in the record set.  If there are multiple records in the PTR record set, **reject** the change
 
 
 # Drawbacks
