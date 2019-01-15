@@ -118,7 +118,7 @@ _Note: This can be entered via batch or zone screen, the net action is to create
 
 ### Update an A or AAAA record set with PTR correspondance enabled
 
-_Note: This can be entered via batch or zone screen, the net action is to create an A record set_
+_Note: This can be entered via batch or zone screen, the net action is to update a PTR record set_
 
 1. System detects an update to an existing A or AAAA record set with PTR correspondance enabled
 2. For each IP address in the A record set, lookup the corresponding PTR record in our database to see if it already exists
@@ -128,7 +128,7 @@ _Note: This can be entered via batch or zone screen, the net action is to create
     
 ### Update a PTR record set with PTR correspondance enabled
 
-_Note: This can be entered via batch or zone screen, the net action is to create an A record set_
+_Note: This can be entered via batch or zone screen, the net action is to update A or AAAA record set_
 
 1. System detects an update to an existing PTR record set with PTR correspondance enabled
 2. If there is more than one record in the record set, reject the change
@@ -136,6 +136,26 @@ _Note: This can be entered via batch or zone screen, the net action is to create
 4. If it exists in VinylDNS, ensure that the user has access to make the change of the PTR record
     1. If an address is _removed_ from the record set as part of the update, issue a **Delete** if and only if there is only a single record in the record set.  If there are multiple records in the PTR record set, **reject** the change
     2. If an address is _added_ to the record set as part of the update, issue an **Update** to the PTR record set if and only if there is a single record in the record set.  If there are multiple records in the PTR record set, **reject** the change
+    
+### Delete A or AAAA record set with PTR correspondance enabled
+
+_Note: This can be entered via batch or zone screen, the net action is to delete A or AAAA record set_
+
+1. System detects a delete to an existing A or AAAA record set with PTR correspondance enabled
+2. For each IP address in the A record set, lookup the corresponding PTR record in our database to see if it already exists
+3. If it exists in VinylDNS, ensure that the user has access to delete the PTR record
+    1. If it exists, issue a normal Delete PTR record set change
+    2. If the record exists in the backend but not in VinylDNS, first load the record set into VinylDNS with the record data set to what is in the DNS backend (effectively syncing the record set), then issue a Delete record set change normally.  This would result in 2 separate changes, one to load the record set and a second to update it
+    
+### Delete a PTR record set with PTR correspondance enabled
+
+_Note: This can be entered via batch or zone screen, the net action is to delete PTR record set_
+
+1. System detects a delete to an existing PTR record set with PTR correspondance enabled
+2. For each FQDN in the PTR record set, lookup the corresponding A or AAAA record in our database to see if it already exists
+3. If it exists in VinylDNS, ensure that the user has access to delete the record
+    1. If it exists, issue a normal Delete A record set change
+    2. If the record exists in the backend but not in VinylDNS, first load the record set into VinylDNS with the record data set to what is in the DNS backend (effectively syncing the record set), then issue a Delete record set change normally.  This would result in 2 separate changes, one to load the record set and a second to update it
 
 
 # Drawbacks
