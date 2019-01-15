@@ -18,7 +18,7 @@ PTR Correspondance will make it simpler to enable this best practice for VinylDN
 # Motivation
 [motivation]: #motivation
 
-Ideally, every forward record points to exactly one reverse record, and that reverse record points to exactly one forward record.  This best practice is cumbersome in VinylDNS today, as users have to make 2 separate transactions in order to keep the forward and reverse records aligned.  The present process follows:
+Ideally, every forward record points to exactly one reverse record, and that reverse record points to exactly one forward record.  This best practice is cumbersome in VinylDNS today, as users have to make multiple separate transactions in order to keep the forward and reverse records aligned.  The present process follows:
 
 1. User creates an A record `foo` in the `bar.com` zone: `foo.bar.com A 300 192.168.0.1`
 2. User creates a PTR record `1` in the `0.168.192.in-addr.arpa` zone: `1 PTR 300 foo.bar.com`
@@ -38,35 +38,33 @@ PTR correspondance attempts to make this simple for the user, facilitating the c
 
 The application has 2 kinds of users:
 
-1. **Casual users** - these are users who simply want to give names to things.  They generally are not aware of the complexity of DNS, or even what a DNS record is.
-2. **Advanced users** - these are users who are generally well-versed in DNS, and will be familiar with the concepts of PTR, A, AAAA records and the idea of PTR correspondance.
+1. **Casual users** - these are users who simply want to give names to things.  They generally are not aware of the complexity of DNS, or even what a DNS record is.  These users typically use the _batch change_ screen to make their changes.
+2. **Advanced users** - these are users who are generally well-versed in DNS, and will be familiar with the concepts of PTR, A, AAAA records and the idea of PTR correspondance.  These users typically manage their zones via the _zone_ screen.
 
 The recommended approach is to facilitate PTR correspondance via an option when users manage records.  We do not want to manage the correspondance for users automatically, as there are valid use cases when correspondance is not needed as well as times when a PTR record _should_ have multiple forward records associated with it.
 
-Casual users generally use the _batch change_ screen to make their changes; whereas advanced users will typically manage their zones via the _zone_ screen.
-
 ## Batch Screen
 
-1. For any ADD record change for an A or AAAA record, allow the user to check a box to automatically update the corresponding PTR record.  This check box should be **checked** by default.
-1. For any DELETE record change for an A or AAAA record, allow the user to check a box to automatically delete the corresponding PTR record.  This check box should be **checked** by default.
-1. For any ADD record change for a PTR record, allow the user to check a box to automatically update the corresponding A or AAAA record.  This check box should be **checked** by default.
-1. For any DELETE record change for a PTR record, allow the user to check a box to automatically delete the corresponding A or AAAA record.  This check box should be **checked** by default.
+1. For any ADD record change for an A or AAAA record, provide the user the option to automatically update the corresponding PTR record.  This options should be **enabled** by default.
+1. For any DELETE record change for an A or AAAA record, provide the user the option to automatically delete the corresponding PTR record.  This options should be **enabled** by default.
+1. For any ADD record change for a PTR record, provide the user the option to automatically update the corresponding A or AAAA record.  This options should be **enabled** by default.
+1. For any DELETE record change for a PTR record, provide the user the option to automatically delete the corresponding A or AAAA record.  This options should be **enabled** by default.
 
 ## Zone Screen
 
-1. When a user chooses to Create a new A or AAAA record set, allow the user to check a box to automatically update the corresponding PTR records.  **checked** by default.
-1. When a user chooses to Update an A or AAAA record set, allow the user to check a box to automatically update the corresponding PTR records.  **checked** by default.
-1. When a user chooses to Delete an A or AAAA record set, allow the user to check a box to automatically delete the corresponding PTR records.  **checked** by default.
-1. When a user chooses to Create a new PTR record set, allow the user to check a box to automatically update the corresponding A or AAAA records.  **checked** by default.
-1. When a user chooses to Update a PTR record set, allow the user to check a box to automatically update the corresponding A or AAAA records.  **checked** by default.
-1. When a user chooses to Delete a PTR record set, allow the user to check a box to automatically delete the corresponding A or AAAA records.  **checked** by default.
+1. When a user chooses to Create a new A or AAAA record set, provide the user the option to automatically update the corresponding PTR records.  This options should be **enabled** by default.
+1. When a user chooses to Update an A or AAAA record set, provide the user the option to automatically update the corresponding PTR records.  This options should be **enabled** by default.
+1. When a user chooses to Delete an A or AAAA record set, provide the user the option to automatically delete the corresponding PTR records.  This options should be **enabled** by default.
+1. When a user chooses to Create a new PTR record set, provide the user the option to automatically update the corresponding A or AAAA records.  This options should be **enabled** by default.
+1. When a user chooses to Update a PTR record set, provide the user the option to automatically update the corresponding A or AAAA records.  This options should be **enabled** by default.
+1. When a user chooses to Delete a PTR record set, provide the user the option to automatically delete the corresponding A or AAAA records.  This options should be **enabled** by default.
 
 
 ## Use Cases
 
-### Create an A or a AAAA record set with PTR correspondance enabled
+**Note: For all use cases, the user can choose to create | update | delete a record set from the batch screen or the zone screen.  Both entry mechanisms apply to the use cases defined below.**
 
-_Note: This can be entered via batch or zone screen, the net action is to create an A record set_
+### Create an A or a AAAA record set with PTR correspondance enabled
 
 1. System detects that a new A record set is to be created and the PTR correspondance flag is set to `true`
 2. For each IP address in the A record set, lookup the corresponding PTR record in our database to see if it already exists
@@ -80,7 +78,7 @@ _Note: This can be entered via batch or zone screen, the net action is to create
     1. If the record does not exist in the backend, then proceed with creating the PTR record normally
     2. If the record exists in the backend but not in VinylDNS, first load the record set into VinylDNS with the record data set to what is in the DNS backend (effectively syncing the record set), then issue an Update record set change normally.  This would result in 2 separate changes, one to load the record set and a second to update it
     
-**Note: The exception condition is new and should be discussed.  The motivation for making this change is because we are doing changes behind the scenes on behalf of the user to maintain correspondance.  The alternative would be to reject the change as we do not have the record set (which follows what we do today), but the fear is that most users would simply "uncheck" the checkbox to move forward.  Doing that would be counter to this entire feature!  I believe it is incumbent upon VinylDNS to ensure correspondance as much as possible.**
+**Note: The exception condition is new and should be discussed.  The motivation for making this change is because we are doing changes behind the scenes on behalf of the user to maintain correspondance.  The alternative would be to reject the change as we do not have the record set (which follows what we do today), but my concern is that most users would simply "uncheck" the checkbox to move forward.  Doing that would be counter to this entire feature!  I believe it is incumbent upon VinylDNS to ensure correspondance as much as possible.**
     
 #### Exception Case: The user does not have access to the PTR record
 
@@ -88,13 +86,11 @@ _Note: This can be entered via batch or zone screen, the net action is to create
 
 #### Exception Case: Different PTR records are found pointing to the new A or AAAA record set
 
-It is possible that other PTR record sets are found in VinylDNS that point to the new A or AAAA record set.  _Note: it would not be possible to query the DNS backend for this kind of information; however, it is possible to do the lookup for PTR records matching the FQDN of the forward record._
+It is possible that other PTR record sets are found in VinylDNS that point to the new A or AAAA record set.  _Note: it would not be possible to query the DNS backend for this kind of information; however, it is possible to do the lookup for PTR records matching the FQDN of the forward record in our own VinylDNS database._
 
 1. For each PTR record found, attempt to delete the record set.  If the user does not have permission, reject the change.
 
 ### Create a PTR record set with PTR correspondance enabled
-
-_Note: This can be entered via batch or zone screen, the net action is to create an A record set.  This case should mirror the A or AAAA record set case_
 
 1. System detects that a new PTR record set is to be created and the PTR correspondance flag is set to `true`
 2. Check that there is only 1 record in the PTR record set
