@@ -1,7 +1,7 @@
 _NOTE: This format comes from the
 [Rust language RFC process](https://github.com/rust-lang/rfcs)._
 
-- Feature or Prototype: ptr_correspondance
+- Feature or Prototype: ptr_correspondence
 - Start Date: 2019-01-03
 - RFC PR: TBD
 - Issue: TBD
@@ -13,7 +13,7 @@ PTR records facilitate reverse lookups via utilities like `whois` in order to de
 
 Due to the nature of DNS, these records exist in _separate_ DNS zones.  In order to facilitate this best practice, users have to 1) be aware of the convention and 2) ensure that they are making updates in both the correct forward and reverse zone.
 
-PTR Correspondance will make it simpler to enable this best practice for VinylDNS users by giving them the option to keep forward and reverse records in sync.
+PTR correspondence will make it simpler to enable this best practice for VinylDNS users by giving them the option to keep forward and reverse records in sync.
 
 # Motivation
 [motivation]: #motivation
@@ -31,7 +31,7 @@ Similarly, when a user goes to _update_ the record, they need to make 3 separate
 
 Finally, when a user _deletes_ the record, they need to make sure to delete both the forward and reverse records in 2 transactions.
 
-PTR correspondance attempts to make this simple for the user, facilitating the correspondance between A, AAAA and their PTR records.
+PTR correspondence attempts to make this simple for the user, facilitating the correspondence between A, AAAA and their PTR records.
 
 # Design and Goals
 [design]: #design-and-goals
@@ -39,9 +39,9 @@ PTR correspondance attempts to make this simple for the user, facilitating the c
 The application has 2 kinds of users:
 
 1. **Casual users** - these are users who simply want to give names to things.  They generally are not aware of the complexity of DNS, or even what a DNS record is.  These users typically use the _batch change_ screen to make their changes.
-2. **Advanced users** - these are users who are generally well-versed in DNS, and will be familiar with the concepts of PTR, A, AAAA records and the idea of PTR correspondance.  These users typically manage their zones via the _zone_ screen.
+2. **Advanced users** - these are users who are generally well-versed in DNS, and will be familiar with the concepts of PTR, A, AAAA records and the idea of PTR correspondence.  These users typically manage their zones via the _zone detail_ screen.
 
-The recommended approach is to facilitate PTR correspondance via an option when users manage records.  We do not want to manage the correspondance for users automatically, as there are valid use cases when correspondance is not needed as well as times when a PTR record _should_ have multiple forward records associated with it.
+The recommended approach is to facilitate PTR correspondence via an option when users manage records.  We do not want to manage the correspondence for users automatically, as there are valid use cases when correspondence is not needed as well as times when a PTR record _should_ have multiple forward records associated with it.
 
 ## Batch Screen
 
@@ -64,9 +64,9 @@ The recommended approach is to facilitate PTR correspondance via an option when 
 
 **Note: For all use cases, the user can choose to create | update | delete a record set from the batch screen or the zone screen.  Both entry mechanisms apply to the use cases defined below.**
 
-### Create an A or a AAAA record set with PTR correspondance enabled
+### Create an A or a AAAA record set with PTR correspondence enabled
 
-1. System detects that a new A record set is to be created and the PTR correspondance flag is set to `true`
+1. System detects that a new A record set is to be created and the PTR correspondence flag is set to `true`
 2. For each IP address in the A record set, lookup the corresponding PTR record in our database to see if it already exists
 3. If it exists in VinylDNS, ensure that the user has access to make the change of the PTR record
 4. Create or update the PTR record for each record in the A record set.  The `ptrdname` should be set to the FQDN of the a record
@@ -78,7 +78,7 @@ The recommended approach is to facilitate PTR correspondance via an option when 
     1. If the record does not exist in the backend, then proceed with creating the PTR record normally
     2. If the record exists in the backend but not in VinylDNS, first load the record set into VinylDNS with the record data set to what is in the DNS backend (effectively syncing the record set), then issue an Update record set change normally.  This would result in 2 separate changes, one to load the record set and a second to update it
     
-**Note: The exception condition is new and should be discussed.  The motivation for making this change is because we are doing changes behind the scenes on behalf of the user to maintain correspondance.  The alternative would be to reject the change as we do not have the record set (which follows what we do today), but my concern is that most users would simply "uncheck" the checkbox to move forward.  Doing that would be counter to this entire feature!  I believe it is incumbent upon VinylDNS to ensure correspondance as much as possible.**
+**Note: The exception condition is new and should be discussed.  The motivation for making this change is because we are doing changes behind the scenes on behalf of the user to maintain correspondence.  The alternative would be to reject the change as we do not have the record set (which follows what we do today), but my concern is that most users would simply "uncheck" the checkbox to move forward.  Doing that would be counter to this entire feature!  I believe it is incumbent upon VinylDNS to ensure correspondence as much as possible.**
     
 #### Exception Case: The user does not have access to the PTR record
 
@@ -90,17 +90,17 @@ It is possible that other PTR record sets are found in VinylDNS that point to th
 
 1. For each PTR record found, attempt to delete the record set.  If the user does not have permission, reject the change.
 
-### Create a PTR record set with PTR correspondance enabled
+### Create a PTR record set with PTR correspondence enabled
 
-1. System detects that a new PTR record set is to be created and the PTR correspondance flag is set to `true`
+1. System detects that a new PTR record set is to be created and the PTR correspondence flag is set to `true`
 2. Check that there is only 1 record in the PTR record set
 3. Lookup the corresponding A or AAAA record in our database to see if it already exists
 4. If it exists in VinylDNS, ensure that the user has access to make the change of the A or AAAA record
 5. Create or update the A or AAAA record set
 
-#### Exception Case: Multi-record PTR with PTR correspondance enabled
+#### Exception Case: Multi-record PTR with PTR correspondence enabled
 
-1.  By the definition of PTR correspondance, there can be exactly **one** record in the record set.  Reject the request with a failure message indicating that the request is malformed
+1.  By the definition of PTR correspondence, there can be exactly **one** record in the record set.  Reject the request with a failure message indicating that the request is malformed
         
 #### Exception Case: A or AAAA Record does not exist in VinylDNS database
 
@@ -112,34 +112,34 @@ It is possible that other PTR record sets are found in VinylDNS that point to th
 
 1. If the user does not have access to update the A or AAAA record, reject the request (batch change request or create record set request).  Provide information in the response as to who has ownership to help possibly gain the right access.
 
-### Update an A or AAAA record set with PTR correspondance enabled
+### Update an A or AAAA record set with PTR correspondence enabled
 
-1. System detects an update to an existing A or AAAA record set with PTR correspondance enabled
+1. System detects an update to an existing A or AAAA record set with PTR correspondence enabled
 2. For each IP address in the A record set, lookup the corresponding PTR record in our database to see if it already exists
 3. If it exists in VinylDNS, ensure that the user has access to make the change of the PTR record
     1. If an address is _removed_ from the record set as part of the update, issue a **Delete** if and only if there is only a single record in the record set.  If there are multiple records in the PTR record set, **reject** the change
     2. If an address is _added_ to the record set as part of the update, issue an **Update** to the PTR record set if and only if there is a single record in the record set.  If there are multiple records in the PTR record set, **reject** the change
     
-### Update a PTR record set with PTR correspondance enabled
+### Update a PTR record set with PTR correspondence enabled
 
-1. System detects an update to an existing PTR record set with PTR correspondance enabled
+1. System detects an update to an existing PTR record set with PTR correspondence enabled
 2. If there is more than one record in the record set, reject the change
 3. Lookup the corresponding A or AAAA record in our database to see if it already exists
 4. If it exists in VinylDNS, ensure that the user has access to make the change of the PTR record
     1. If an address is _removed_ from the record set as part of the update, issue a **Delete** if and only if there is only a single record in the record set.  If there are multiple records in the PTR record set, **reject** the change
     2. If an address is _added_ to the record set as part of the update, issue an **Update** to the PTR record set if and only if there is a single record in the record set.  If there are multiple records in the PTR record set, **reject** the change
     
-### Delete A or AAAA record set with PTR correspondance enabled
+### Delete A or AAAA record set with PTR correspondence enabled
 
-1. System detects a delete to an existing A or AAAA record set with PTR correspondance enabled
+1. System detects a delete to an existing A or AAAA record set with PTR correspondence enabled
 2. For each IP address in the A record set, lookup the corresponding PTR record in our database to see if it already exists
 3. If it exists in VinylDNS, ensure that the user has access to delete the PTR record
     1. If it exists, issue a normal Delete PTR record set change
     2. If the record exists in the backend but not in VinylDNS, first load the record set into VinylDNS with the record data set to what is in the DNS backend (effectively syncing the record set), then issue a Delete record set change normally.  This would result in 2 separate changes, one to load the record set and a second to update it
     
-### Delete a PTR record set with PTR correspondance enabled
+### Delete a PTR record set with PTR correspondence enabled
 
-1. System detects a delete to an existing PTR record set with PTR correspondance enabled
+1. System detects a delete to an existing PTR record set with PTR correspondence enabled
 2. For each FQDN in the PTR record set, lookup the corresponding A or AAAA record in our database to see if it already exists
 3. If it exists in VinylDNS, ensure that the user has access to delete the record
     1. If it exists, issue a normal Delete A record set change
