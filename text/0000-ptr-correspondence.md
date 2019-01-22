@@ -43,6 +43,9 @@ The application has 2 kinds of users:
 
 The recommended approach is to facilitate PTR correspondence via an option when users manage records.  We do not want to manage the correspondence for users automatically, as there are valid use cases when correspondence is not needed as well as times when a PTR record _should_ have multiple forward records associated with it.
 
+## Access Controls
+The same access controls follow for maintaining PTR correspondance.  i.e. treat the automatic maintenance of records on behalf of PTR correspondance as if each update was a normal, standalone update performed in VinylDNS.
+
 ## Batch Screen
 
 1. For any ADD record change for an A or AAAA record, provide the user the option to automatically update the corresponding PTR record.  This options should be **enabled** by default.
