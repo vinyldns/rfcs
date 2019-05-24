@@ -49,10 +49,8 @@ Why should we *not* do this?
 
 # Alternatives
 [alternatives]: #alternatives
-
-What other designs have been considered? What is the impact of not doing this?
-
-Implement batch change request as an optional pre-approval process to batch change.
+<details>
+<summary>Implement batch change request as an optional pre-approval process to batch change.</summary>
 
 ## Design and Goals
 1. User submits `BatchChangeRequest` (either through portal form or API request)
@@ -80,8 +78,9 @@ Implement batch change request as an optional pre-approval process to batch chan
 ### Considerations
 1. Since `BatchChangeRequest` would be validating the changes that would be going through `BatchChange`, it may be a good idea to add an overload for `BatchChangeService` which skips validations for `BatchChangeRequest`s that succeed validations to avoid "double processing".
 
-## Design notes
+### Design notes
 1. Out-of-band items as of this time would only be zone create and some type of custom request. The custom request should simply be a a freeform field for the submitter's comment and another freeform field for DNS technician comments.
+</details>
 
 # Unresolved questions
 [unresolved]: #unresolved-questions
