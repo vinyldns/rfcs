@@ -4,7 +4,7 @@ _NOTE: This format comes from the
 - Feature or Prototype: Batch Change Review Process
 - Start Date: 2019-04-03
 - RFC PR: (leave this empty, populate once the PR is created with a Github link to the PR)
-- Issue: (once approved, this will link to the issue tracker for implementation of the RFC)
+- Issue: https://github.com/vinyldns/vinyldns/issues/659
 
 # Summary
 [summary]: #summary
