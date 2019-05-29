@@ -15,28 +15,22 @@ Implement a review step in the batch change process between validation and proce
 [motivation]: #motivation
 
 Example 1: If a zone does not exist in VinylDNS we may want to add that zone to VinylDNS and then continue processing the batch change.
+
 Example 2: Certain record types may need manual review and approval.
 
 # Design and Goals
 [design]: #design-and-goals
 
-User submits a batch change (in the portal):
- 1. Submits batch
- 1. VinylDNS runs validations
- 1. Tell user everything is okay
- 1. User hits okay to move batch change into processing or hits cancel and continues modifying batch change
+- Mantain existing batch change flow if the batch change passes all validations. No manual intervention required.
 
-Exceptions:
-  - Validations hard fail
-  - Validation warnings
+- If batch change fails validation for one or more of the permissible errors, require manual review, do not send for processing, instead designate as requiring manual intervention.
 
 DNS technician reviews pending requests:
-  1. Technician checks requests
-  1. Technician reviews
-  1. Technician clicks Approve (or Deny)
-  1. Batch change is submitted for processing (or marked as `Denied`)
-
-Upon successful submission of a request and a DNS technician approving or denying the request, an e-mail would be sent to an e-mail address linked to the request.
+  1. DNS Admin checks list of pending requests
+  1. DNS Admin reviews a pending request
+  1. DNS Admin Approves (or Rejects) the request
+  1. An e-mail is sent ot the batch change initiator to let them know the outcome of the review
+  1. If approved, batch change is submitted for processing, resuming current batch change workflow
 
 # Drawbacks
 [drawbacks]: #drawbacks
@@ -86,8 +80,6 @@ Why should we *not* do this?
 [unresolved]: #unresolved-questions
 
 - What validations/rules require manual intervention?
-
-What parts of the design are still TBD?
 
 # Outcome(s)
 [outcome]: #outcome
