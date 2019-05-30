@@ -21,15 +21,15 @@ Example 2: Certain record types may need manual review and approval.
 # Design and Goals
 [design]: #design-and-goals
 
-- Mantain existing batch change flow if the batch change passes all validations. No manual intervention required.
+- Maintain existing batch change flow if the batch change passes all validations. No manual intervention required.
 
-- If batch change fails validation for one or more of the permissible errors, require manual review, do not send for processing, instead designate as requiring manual intervention.
+- If the batch change fails validation for one or more of the permissible errors, do not send for processing, instead designate as requiring manual intervention.
 
-DNS technician reviews pending requests:
-  1. DNS Admin checks list of pending requests
-  1. DNS Admin reviews a pending request
-  1. DNS Admin Approves (or Rejects) the request
-  1. An e-mail is sent ot the batch change initiator to let them know the outcome of the review
+DNS administrator reviews pending requests:
+  1. DNS administrator checks list of pending requests
+  1. DNS administrator reviews a pending request
+  1. DNS administrator Approves (or Rejects) the request
+  1. An e-mail is sent to the batch change submitter to let them know the outcome of the review
   1. If approved, batch change is submitted for processing, resuming current batch change workflow
 
 # Drawbacks
