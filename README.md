@@ -1,4 +1,5 @@
 # VinylDNS RFCs
+![GitHub](https://img.shields.io/github/license/vinyldns/rfcs)
 
 _This process attempts to emulate the success of the Rust programming language
 and as such has almost mirrored the [RFC process the Rust developers
